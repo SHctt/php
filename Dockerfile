@@ -1,4 +1,4 @@
-FROM php:fpm-buster
+FROM php:7-fpm-buster
 
 EXPOSE 9000
 # 进入工作目录
@@ -7,10 +7,10 @@ WORKDIR /usr/local/src
 RUN apt-get update \ 
 && apt-get install -y git curl wget cron locales libc-client-dev libkrb5-dev libzip-dev
 
-ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 RUN chmod +x /usr/local/bin/install-php-extensions && \
-  install-php-extensions mysqli redis gd xmlrpc opcache zip bz2 bcmath pdo_mysql
+  install-php-extensions mysqli redis gd xmlrpc opcache zip bz2 bcmath pdo_mysql && \
+
 
 # 把语言设置成简体中文
 RUN dpkg-reconfigure locales && \
